@@ -31,9 +31,28 @@ jobs:
           zip -r Base64_Encoder_Decoder.zip Base64_Encoder_Decoder.app
           mv Base64_Encoder_Decoder.zip $GITHUB_WORKSPACE
 
-      - name: Upload Release Asset
+      - name: Create DMG
+        run: |
+          # 创建临时目录用于构建DMG
+          mkdir -p dmg_temp
+          
+          # 复制应用到临时目录
+          cp -R build/Build/Products/Release/Base64_Encoder_Decoder.app dmg_temp/
+          
+          # 创建DMG
+          hdiutil create -volname "Base64 Encoder Decoder" \
+            -srcfolder dmg_temp \
+            -ov -format UDZO \
+            Base64_Encoder_Decoder.dmg
+          
+          # 清理临时目录
+          rm -rf dmg_temp
+
+      - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
         with:
-          files: Base64_Encoder_Decoder.zip
+          files: |
+            Base64_Encoder_Decoder.zip
+            Base64_Encoder_Decoder.dmg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
