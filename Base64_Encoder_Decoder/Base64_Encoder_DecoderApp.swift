@@ -13,5 +13,7 @@ struct Base64_Encoder_DecoderApp: App {
         WindowGroup {
             ContentView()
         }
+        .windowResizability(.contentMinSize)
+        .defaultSize(width: 800, height: 900)
     }
 }
