@@ -22,17 +22,17 @@ jobs:
         run: |
           xcodebuild -scheme Base64_Encoder_Decoder -project Base64_Encoder_Decoder.xcodeproj -configuration Release -derivedDataPath build
 
-      - name: Package .app as zip
+      - name: Create DMG installer
         run: |
-          cd build/Build/Products/Release
-          zip -r Base64_Encoder_Decoder.app.zip Base64_Encoder_Decoder.app
-          mv Base64_Encoder_Decoder.app.zip $GITHUB_WORKSPACE
+          mkdir -p dmg-root
+          cp -R build/Build/Products/Release/Base64_Encoder_Decoder.app dmg-root/
+          hdiutil create Base64_Encoder_Decoder.dmg -volname "Base64 Encoder Decoder" -srcfolder dmg-root -ov -format UDZO
 
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
-          files: Base64_Encoder_Decoder.app.zip
+          files: Base64_Encoder_Decoder.dmg
           body: |
-            下载 Base64_Encoder_Decoder.app.zip，解压后即可直接运行 Base64_Encoder_Decoder.app。
+            下载 Base64_Encoder_Decoder.dmg，双击后将 Base64_Encoder_Decoder.app 拖入 Applications 文件夹即可完成安装。
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
