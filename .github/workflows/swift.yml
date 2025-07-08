@@ -21,27 +21,23 @@ jobs:
         with:
           xcode-version: latest
 
-      - name: Set deployment target and code signing
+      - name: Set deployment target
         run: |
-          # 更新部署目标版本到15.2 (项目级别)
+          # 只修改部署目标版本到15.2 (项目级别)
           /usr/libexec/PlistBuddy -c "Set :objects:2889E16B2E1CEEE500A6360B:buildSettings:MACOSX_DEPLOYMENT_TARGET 15.2" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
           /usr/libexec/PlistBuddy -c "Set :objects:2889E16C2E1CEEE500A6360B:buildSettings:MACOSX_DEPLOYMENT_TARGET 15.2" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
-          
-          # 修改目标级别的代码签名设置 (Debug)
-          /usr/libexec/PlistBuddy -c "Set :objects:2889E16E2E1CEEE500A6360B:buildSettings:CODE_SIGN_STYLE Manual" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
-          /usr/libexec/PlistBuddy -c "Add :objects:2889E16E2E1CEEE500A6360B:buildSettings:CODE_SIGN_IDENTITY string -" Base64_Encoder_Decoder.xcodeproj/project.pbxproj || /usr/libexec/PlistBuddy -c "Set :objects:2889E16E2E1CEEE500A6360B:buildSettings:CODE_SIGN_IDENTITY -" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
-          /usr/libexec/PlistBuddy -c "Add :objects:2889E16E2E1CEEE500A6360B:buildSettings:CODE_SIGNING_REQUIRED bool NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj || /usr/libexec/PlistBuddy -c "Set :objects:2889E16E2E1CEEE500A6360B:buildSettings:CODE_SIGNING_REQUIRED NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
-          /usr/libexec/PlistBuddy -c "Add :objects:2889E16E2E1CEEE500A6360B:buildSettings:CODE_SIGNING_ALLOWED bool NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj || /usr/libexec/PlistBuddy -c "Set :objects:2889E16E2E1CEEE500A6360B:buildSettings:CODE_SIGNING_ALLOWED NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
-          
-          # 修改目标级别的代码签名设置 (Release)
-          /usr/libexec/PlistBuddy -c "Set :objects:2889E16F2E1CEEE500A6360B:buildSettings:CODE_SIGN_STYLE Manual" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
-          /usr/libexec/PlistBuddy -c "Add :objects:2889E16F2E1CEEE500A6360B:buildSettings:CODE_SIGN_IDENTITY string -" Base64_Encoder_Decoder.xcodeproj/project.pbxproj || /usr/libexec/PlistBuddy -c "Set :objects:2889E16F2E1CEEE500A6360B:buildSettings:CODE_SIGN_IDENTITY -" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
-          /usr/libexec/PlistBuddy -c "Add :objects:2889E16F2E1CEEE500A6360B:buildSettings:CODE_SIGNING_REQUIRED bool NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj || /usr/libexec/PlistBuddy -c "Set :objects:2889E16F2E1CEEE500A6360B:buildSettings:CODE_SIGNING_REQUIRED NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
-          /usr/libexec/PlistBuddy -c "Add :objects:2889E16F2E1CEEE500A6360B:buildSettings:CODE_SIGNING_ALLOWED bool NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj || /usr/libexec/PlistBuddy -c "Set :objects:2889E16F2E1CEEE500A6360B:buildSettings:CODE_SIGNING_ALLOWED NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
 
       - name: Build app for release
         run: |
-          xcodebuild -scheme Base64_Encoder_Decoder -project Base64_Encoder_Decoder.xcodeproj -configuration Release -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+          xcodebuild -scheme Base64_Encoder_Decoder \
+            -project Base64_Encoder_Decoder.xcodeproj \
+            -configuration Release \
+            -derivedDataPath build \
+            -allowProvisioningUpdates \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_STYLE=Manual
 
       - name: Create .zip of app
         run: |
