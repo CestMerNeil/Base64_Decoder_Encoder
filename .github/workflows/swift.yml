@@ -24,12 +24,13 @@ jobs:
       - name: Set deployment target and code signing
         run: |
           # 更新部署目标版本到15.2
-          /usr/libexec/PlistBuddy -c "Set :objects:33E6EB3D2B7C0D9A00A4F0C1:buildSettings:MACOSX_DEPLOYMENT_TARGET 15.2" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Set :objects:2889E16B2E1CEEE500A6360B:buildSettings:MACOSX_DEPLOYMENT_TARGET 15.2" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Set :objects:2889E16C2E1CEEE500A6360B:buildSettings:MACOSX_DEPLOYMENT_TARGET 15.2" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
           
           # 禁用代码签名
-          /usr/libexec/PlistBuddy -c "Set :objects:33E6EB3D2B7C0D9A00A4F0C1:buildSettings:CODE_SIGN_IDENTITY -" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
-          /usr/libexec/PlistBuddy -c "Set :objects:33E6EB3D2B7C0D9A00A4F0C1:buildSettings:CODE_SIGNING_REQUIRED NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
-          /usr/libexec/PlistBuddy -c "Set :objects:33E6EB3D2B7C0D9A00A4F0C1:buildSettings:CODE_SIGNING_ALLOWED NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Set :objects:2889E16E2E1CEEE500A6360B:buildSettings:CODE_SIGN_IDENTITY -" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Set :objects:2889E16E2E1CEEE500A6360B:buildSettings:CODE_SIGNING_REQUIRED NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
+          /usr/libexec/PlistBuddy -c "Set :objects:2889E16E2E1CEEE500A6360B:buildSettings:CODE_SIGNING_ALLOWED NO" Base64_Encoder_Decoder.xcodeproj/project.pbxproj
 
       - name: Build app for release
         run: |
